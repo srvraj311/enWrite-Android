@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewNoteAdd"
+    android:background="@color/colorPrimaryBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/note_title"
+        android:layout_marginTop="30dp"
+        android:padding="18dp"
+        android:paddingTop="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#2B2B2B"
+        android:textColorHint="@color/colorPrimaryDark"
+        android:textColor="@color/white"
+        android:ems="10"
+        android:hint="@string/title"
+        android:inputType="text"
+        android:textSize="25sp"
+        android:gravity="start"
+        android:importantForAutofill="no" />
+        <EditText
+            android:id="@+id/note"
+            android:padding="20dp"
+            android:textSize="16sp"
+            android:background="#2B2B2B"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:layout_below="@+id/note_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:ems="10"
+            android:hint="@string/enwrite_here"
+            android:gravity="start"
+            android:inputType="text|textMultiLine|textCapSentences"
+            android:importantForAutofill="no" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBarSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/save_app_bar_menu"
+        app:hideOnScroll="true"
+        app:navigationIcon="@drawable/ic_menu"
+        app:fabAlignmentMode="end"
+        app:fabCradleMargin="10dp"
+        />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorAccent"
+        android:contentDescription="@string/add_new_note_button"
+        android:src="@drawable/ic_done"
+        app:tint="@color/colorWhite"
+        app:layout_anchor="@id/bottomAppBarSave"
+        app:maxImageSize="35dp"
+        app:rippleColor="#FFFEFE" />
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
