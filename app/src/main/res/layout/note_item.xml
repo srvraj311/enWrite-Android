@@ -12,13 +12,19 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
         android:id="@+id/ViewHolderItem"
-        card_view:cardElevation="2dp"
+        card_view:cardElevation="4dp"
         app:cardCornerRadius="8sp"
+        android:paddingTop="8sp"
+        android:paddingBottom="8sp"
+
         >
-        <LinearLayout
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="8sp"
+            android:layout_marginBottom="8sp"
+
             >
 
             <TextView
@@ -45,7 +51,7 @@
                 android:paddingEnd="10sp"
                 android:paddingBottom="10sp"
                 />
-        </LinearLayout>
+        </GridLayout>
 
     </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
 

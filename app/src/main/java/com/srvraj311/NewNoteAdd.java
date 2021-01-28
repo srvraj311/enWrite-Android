@@ -7,6 +7,7 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -110,6 +112,15 @@ public class NewNoteAdd extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     private void getData() {
         db.collection("users").whereEqualTo("email", Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())
                 .get()
@@ -120,12 +131,35 @@ public class NewNoteAdd extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 // Setting The Received Notes Array to Local Array
                                 notesArr = (ArrayList<Note>) document.get("notes");
+                                // Setting The Received Notes Array to Local Array
+                                ArrayList<HashMap<String,String>> arr;
+                                arr = (ArrayList<HashMap<String, String>>) document.get("notes");
+                                notesArr.clear();
+                                for(int i = 0; i < arr.size();i++){
+                                    String title = arr.get(i).get("note_title");
+                                    String body = arr.get(i).get("note_body");
+                                    String date = arr.get(i).get("note_date");
+                                    String colour = arr.get(i).get("note_colour");
+                                    String id = arr.get(i).get("note_id");
+                                    Note note = new Note(title,body,date,colour,id);
+                                    notesArr.add(note);
+                                }
+                                saveData(notesArr);
                             }
                         } else {
                             Log.e("Error getting documents", "Unsuccesfull in getting the data from firestore");
                         }
                     }
                 });
+    }
+
+    private void saveData(ArrayList<Note> notes) {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(notes);
+        editor.putString("notes",json);
+        editor.apply();
     }
 
     private void updateNotesToFstore() {
@@ -141,16 +175,16 @@ public class NewNoteAdd extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             Log.e("UPDATE FIREBASE", "Succesfull");
-
+                            Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                             finish();
-//                            Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            startActivity(intent);
 
                         }else{
-//                            Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            startActivity(intent);
+                            Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            Toast.makeText(getApplicationContext(),"Looks like there is a network problem",Toast.LENGTH_LONG).show();
                             finish();
                             Log.e("UPDATE FIREBASE", "Failed");
                         }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -33,6 +34,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.BufferedOutputStream;
 import java.lang.reflect.Type;
@@ -50,20 +52,45 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
     String umail = mAuth.getCurrentUser().getEmail();
     private CollectionReference notebookRef = db.collection("users");
     RecyclerView recyclerView;
-    ProgressBar progressBar;
-
+    SwipeRefreshLayout swipeDown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notes_screen);
         recyclerView = findViewById(R.id.recylerViewHolder);
-        progressBar = findViewById(R.id.progressBar3);
-        progressBar.setVisibility(View.INVISIBLE);
+        swipeDown = findViewById(R.id.swipe_container);
+
+
+
+
         getData();
         loadData();
         setUpButtons();
-        setAdapter();
+        RecyclerAdapter adapter = new RecyclerAdapter(notesArr);
+        adapter.setData(notesArr);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+
+
+        //Swipe down to refresh
+        swipeDown.setOnRefreshListener(this::getData);
+        swipeDown.setColorSchemeResources(R.color.colorAccent,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+        swipeDown.post(new Runnable() {
+            @Override
+            public void run() {
+
+                swipeDown.setRefreshing(true);
+                Toast.makeText(getApplicationContext(),"Refreshed",Toast.LENGTH_LONG).show();
+                swipeDown.setRefreshing(false);
+            }
+        });
     }
 
 
@@ -79,7 +106,6 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
@@ -90,11 +116,12 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // On click of Add BTN, new Activity will be launched to add notes.
-//                finish();
+                finish();
 
                 Intent intent = new Intent(NotesScreen.this, NewNoteAdd.class);
                 //flags here
                 startActivity(intent);
+
             }
         });
 
@@ -118,10 +145,10 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        progressBar.setVisibility(View.INVISIBLE);
+
     }
     private void getData() {
-        progressBar.setVisibility(View.VISIBLE);
+
         //Getting current user email to match from database
         String umail = mAuth.getCurrentUser().getEmail();
         db.collection("users").whereEqualTo("email", umail)
@@ -169,7 +196,6 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         notesArr = gson.fromJson(json,type);
         if(notesArr == null){
             notesArr = new ArrayList<>();
-
         }
     }
 

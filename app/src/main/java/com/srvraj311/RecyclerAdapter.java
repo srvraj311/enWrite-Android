@@ -42,7 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     public void setData(ArrayList<Note> data){
         this.notesArr = data;
-        notifyItemChanged(notesArr.size());
+        notifyItemChanged(notesArr.size(),null);
 //        notifyDataSetChanged();
     }
 
