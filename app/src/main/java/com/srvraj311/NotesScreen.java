@@ -3,6 +3,7 @@ package com.srvraj311;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.circularreveal.cardview.CircularRevealCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -38,10 +41,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.BufferedOutputStream;
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Timer;
+
+import okio.Timeout;
 
 public class NotesScreen<mAuth> extends AppCompatActivity {
     FloatingActionButton addBtn;
@@ -54,6 +61,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeDown;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,15 +72,11 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
 
 
 
+
         getData();
-        loadData();
         setUpButtons();
-        RecyclerAdapter adapter = new RecyclerAdapter(notesArr);
-        adapter.setData(notesArr);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+
+
 
 
 
@@ -82,30 +86,33 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
-        swipeDown.post(new Runnable() {
+        swipeDown.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void run() {
-
+            public void onRefresh() {
                 swipeDown.setRefreshing(true);
-                Toast.makeText(getApplicationContext(),"Refreshed",Toast.LENGTH_LONG).show();
+                setAdapter();
                 swipeDown.setRefreshing(false);
             }
         });
+
+        RecyclerAdapter adapter = new RecyclerAdapter(notesArr);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        adapter.setData(notesArr);
+        setAdapter();
+
+
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        recyclerView = findViewById(R.id.recylerViewHolder);
         getData();
         loadData();
-        RecyclerAdapter adapter = new RecyclerAdapter(notesArr);
-        adapter.setData(notesArr);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+        setAdapter();
     }
 
 
@@ -117,9 +124,9 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
             public void onClick(View v) {
                 // On click of Add BTN, new Activity will be launched to add notes.
                 finish();
-
                 Intent intent = new Intent(NotesScreen.this, NewNoteAdd.class);
                 //flags here
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
             }
@@ -145,6 +152,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        adapter.setData(notesArr);
 
     }
     private void getData() {
@@ -187,6 +195,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         String json = gson.toJson(notes);
         editor.putString("notes",json);
         editor.apply();
+        loadData();
     }
     private void loadData(){
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences",MODE_PRIVATE);

@@ -31,6 +31,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,6 +74,8 @@ public class NewNoteAdd extends AppCompatActivity {
 
         //Generating Time String
         Date date = new Date();
+        Timestamp ts = new Timestamp(date.getTime());
+
 
         //Getting Primary Array Of Data;
         getData();
@@ -88,7 +91,7 @@ public class NewNoteAdd extends AppCompatActivity {
                 if(note.equals("") && title.equals("")){
                     Toast.makeText(getApplicationContext(),"Ahh !! What will i do with a Empty Note",Toast.LENGTH_LONG).show();
                 }else {
-                    Note newNote = new Note(title, note, date.toString());
+                    Note newNote = new Note(title, note, ts.toString());
                     notesArr.add(newNote);
                     updateNotesToFstore();
                     Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
@@ -176,13 +179,13 @@ public class NewNoteAdd extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Log.e("UPDATE FIREBASE", "Succesfull");
                             Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
 
                         }else{
                             Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             Toast.makeText(getApplicationContext(),"Looks like there is a network problem",Toast.LENGTH_LONG).show();
                             finish();
@@ -195,7 +198,7 @@ public class NewNoteAdd extends AppCompatActivity {
                 Log.e("UPDATE FIREBASE", "Failed" + e);
             }
         })  ;
-        Log.e("FB UPDATE", "Succefully Updated");
+        Log.e("FB UPDATE", "Successfully Updated");
     }
 
 

@@ -134,7 +134,7 @@ public class ProfileInfo extends AppCompatActivity {
         person.put("name", nameData);
         person.put("notes", new ArrayList<Note>(0));
         person.put("bin", new ArrayList<Note>(0));
-        person.put("notes_count", 0);
+        person.put("notesCount", 0);
 
         users.document(currentEmail).set(person);
 
