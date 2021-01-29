@@ -36,6 +36,7 @@ import java.util.Objects;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>{
 
     private ArrayList<Note> notesArr;
+    private ArrayList<Note> bin;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -94,6 +95,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     }
 
     private void delete(int position) {
+        bin.add(this.notesArr.get(position));
+
         this.notesArr.remove(position);
 
 
@@ -104,7 +107,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         CollectionReference users = db.collection("users");
         assert email != null;
         int notesCount = notesArr.size();
-        users.document(email).update("notes",this.notesArr,"notesCount", notesCount).addOnCompleteListener(new OnCompleteListener<Void>() {
+        users.document(email).update("notes",this.notesArr,"notesCount", notesCount,"bin",this.bin).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
