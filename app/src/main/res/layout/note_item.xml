@@ -14,13 +14,12 @@
     <com.google.android.material.circularreveal.cardview.CircularRevealCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
         android:id="@+id/ViewHolderItem"
         card_view:cardElevation="20dp"
         app:cardCornerRadius="10dp"
         android:paddingTop="8sp"
         android:paddingBottom="8sp"
-        app:cardBackgroundColor="#ffffff00"
+        app:cardBackgroundColor="@color/colorWhite"
         >
         <LinearLayout
             android:layout_width="match_parent"

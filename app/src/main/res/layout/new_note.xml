@@ -5,59 +5,160 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewNoteAdd"
-    android:background="@color/colorPrimaryBackground">
+    android:background="@color/colorPrimaryBackground"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/note_title"
-        android:layout_marginTop="30dp"
-        android:padding="18dp"
-        android:paddingTop="25dp"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#2B2B2B"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:textColor="@color/white"
-        android:ems="10"
-        android:hint="@string/title"
-        android:inputType="text"
-        android:textSize="25sp"
-        android:gravity="start"
-        android:importantForAutofill="no" />
-        <EditText
-            android:id="@+id/note"
-            android:padding="20dp"
-            android:textSize="16sp"
-            android:background="#2B2B2B"
-            android:textColorHint="@color/colorPrimaryDark"
-            android:textColor="@color/white"
-            android:layout_below="@+id/note_title"
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true"
+        android:minHeight="@dimen/activity_vertical_margin"
+        android:paddingBottom="80dp"
+
+        >
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|start"
-            android:ems="10"
-            android:hint="@string/enwrite_here"
-            android:gravity="start"
-            android:inputType="text|textMultiLine|textCapSentences"
-            android:importantForAutofill="no" />
+            android:gravity="top"
+            android:orientation="vertical"
 
-    </RelativeLayout>
+            >
+
+            <EditText
+
+                android:id="@+id/note_title"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="30dp"
+                android:background="#2B2B2B"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="@string/title"
+                android:importantForAutofill="no"
+                android:inputType="text|textCapSentences"
+                android:padding="18dp"
+                android:paddingTop="25dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textSize="25sp"
+                />
+
+            <EditText
+                android:id="@+id/note"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/note_title"
+                android:layout_gravity="top|start"
+                android:background="#2B2B2B"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="@string/enwrite_here"
+                android:importantForAutofill="no"
+                android:inputType="text|textMultiLine|textCapSentences"
+                android:minLines="25"
+                android:padding="20dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/note"
+                android:orientation="horizontal"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp">
+
+                <ImageView
+                    android:id="@+id/whiteColor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brightness_1_24"
+                    app:tint="@color/colorWhite" />
+
+                <ImageView
+                    android:id="@+id/greyColor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brightness_1_24"
+                    app:tint="#ACACAC" />
+
+                <ImageView
+                    android:id="@+id/yellowColor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brightness_1_24"
+                    app:tint="#FFF171" />
+
+                <ImageView
+                    android:id="@+id/pinkColor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brightness_1_24"
+                    app:tint="#FF4E8A" />
+
+                <ImageView
+                    android:id="@+id/cyanColor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brightness_1_24"
+                    app:tint="#427C83" />
+
+                <ImageView
+                    android:id="@+id/redColor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brightness_1_24"
+                    app:tint="#A52828" />
+
+                <ImageView
+                    android:id="@+id/greenColor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brightness_1_24"
+                    app:tint="#519F54" />
+
+                <ImageView
+                    android:id="@+id/purpleColor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brightness_1_24"
+                    app:tint="#573593" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+
+
+
+
+
+
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
+
         android:id="@+id/bottomAppBarSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:menu="@menu/save_app_bar_menu"
         app:hideOnScroll="true"
+        android:nestedScrollingEnabled="true"
         app:navigationIcon="@drawable/ic_menu"
         app:fabAlignmentMode="end"
         app:fabCradleMargin="10dp"
         />
-
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/saveBtn"
         android:layout_width="wrap_content"
