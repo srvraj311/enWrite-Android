@@ -115,11 +115,12 @@ public class LoginActivity extends AppCompatActivity {
                     //finish();
                     progressBar.setVisibility(View.INVISIBLE);
                     report.setText(R.string.login_succes);
-                    Intent intent = new Intent(getApplicationContext(), NotesScreen.class );
+                    Intent intent = new Intent(LoginActivity.this, NotesScreen.class );
                     // Flag to Close all other activities
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
+                    finish();
 
                 } else {
                     report.setText("Unable to Log-In , Seems Like a network error");
@@ -127,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(task.getException() instanceof FirebaseAuthInvalidCredentialsException){
                         report.setText(task.getException().getMessage());
                     }
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         });

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,9 +73,7 @@ public class NewNoteAdd extends AppCompatActivity {
         //Focus on the Title Box
         noteTitleBox.requestFocus();
 
-        //Generating Time String
-        Date date = new Date();
-        Timestamp ts = new Timestamp(date.getTime());
+
 
 
         //Getting Primary Array Of Data;
@@ -85,17 +84,7 @@ public class NewNoteAdd extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Getting Text
-                String title = noteTitleBox.getEditableText().toString();
-                String note = noteBodyBox.getEditableText().toString();
-                if(note.equals("") && title.equals("")){
-                    Toast.makeText(getApplicationContext(),"Ahh !! What will i do with a Empty Note",Toast.LENGTH_LONG).show();
-                }else {
-                    Note newNote = new Note(title, note, ts.toString());
-                    notesArr.add(newNote);
-                    updateNotesToFstore();
-                    Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
-                }
+                createNote();
             }
         });
 
@@ -115,13 +104,37 @@ public class NewNoteAdd extends AppCompatActivity {
 
     }
 
+
+    private void createNote() {
+        //Generating Time String
+        Date date = new Date();
+        Timestamp ts = new Timestamp(date.getTime());
+
+        // Getting Text
+            String title = noteTitleBox.getEditableText().toString();
+            String note = noteBodyBox.getEditableText().toString();
+            if(note.equals("") && title.equals("")){
+                Toast.makeText(getApplicationContext(),"Ahh !! What will i do with a Empty Note",Toast.LENGTH_LONG).show();
+            }else {
+                Note newNote = new Note(title, note, ts.toString());
+                notesArr.add(newNote);
+                updateNotesToFstore();
+                Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
+            }
+        }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+        createNote();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        RecyclerAdapter adapter = new RecyclerAdapter(notesArr);
+        adapter.setData(this.notesArr);
+        startActivity(new Intent(NewNoteAdd.this, NotesScreen.class));
     }
 
     private void getData() {
@@ -178,16 +191,16 @@ public class NewNoteAdd extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             Log.e("UPDATE FIREBASE", "Succesfull");
-                            Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
-                            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+//                            Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            startActivity(intent);
                             finish();
 
                         }else{
-                            Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
+//                            Intent intent = new Intent(NewNoteAdd.this, NotesScreen.class);
 //                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            Toast.makeText(getApplicationContext(),"Looks like there is a network problem",Toast.LENGTH_LONG).show();
+//                            startActivity(intent);
+//                            Toast.makeText(getApplicationContext(),"Looks like there is a network problem",Toast.LENGTH_LONG).show();
                             finish();
                             Log.e("UPDATE FIREBASE", "Failed");
                         }

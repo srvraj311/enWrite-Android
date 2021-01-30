@@ -45,8 +45,11 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import okio.Timeout;
 
@@ -55,9 +58,10 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
     BottomAppBar toolbar;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     ArrayList<Note> notesArr = new ArrayList<Note>();
+    ArrayList<Note> notesBin = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String umail = mAuth.getCurrentUser().getEmail();
-    private CollectionReference notebookRef = db.collection("users");
+    String umail = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeDown;
 
@@ -74,9 +78,13 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
 
 
         getData();
+        loadData();
+        loadBin();
         setUpButtons();
 
 
+        //SORT ARRAY
+        Collections.sort(notesArr, new NoteComparator());
 
 
 
@@ -95,16 +103,16 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
             }
         });
 
-        RecyclerAdapter adapter = new RecyclerAdapter(notesArr);
+        RecyclerAdapter adapter = new RecyclerAdapter(notesArr,notesBin);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        adapter.setData(notesArr);
-        setAdapter();
+        adapter.setData(this.notesArr);
 
 
     }
+
 
 
     @Override
@@ -112,7 +120,23 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         super.onResume();
         getData();
         loadData();
-        setAdapter();
+        loadBin();
+
+        RecyclerAdapter adapter = new RecyclerAdapter(notesArr,notesBin);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        adapter.setData(this.notesArr);
+    }
+
+
+    class NoteComparator implements Comparator<Note> {
+
+        @Override
+        public int compare(Note n1, Note n2) {
+            return n2.getNote_date().compareTo(n1.getNote_date());
+        }
     }
 
 
@@ -146,7 +170,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
     }
 
     private void setAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(notesArr);
+        RecyclerAdapter adapter = new RecyclerAdapter(notesArr,notesBin);
         adapter.setData(notesArr);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -158,7 +182,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
     private void getData() {
 
         //Getting current user email to match from database
-        String umail = mAuth.getCurrentUser().getEmail();
+        String umail = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
         db.collection("users").whereEqualTo("email", umail)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -179,7 +203,23 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
                                     Note note = new Note(title,body,date,colour,id);
                                     notesArr.add(note);
                                 }
-                                saveData(notesArr);
+                                saveData(notesArr,"notes");
+
+                                //Getting BIN
+                                ArrayList<HashMap<String,String>> arr2;
+                                arr2 = (ArrayList<HashMap<String, String>>) document.get("bin");
+                                notesBin.clear();
+                                for(int i = 0; i < arr.size();i++){
+                                    String title = arr.get(i).get("note_title");
+                                    String body = arr.get(i).get("note_body");
+                                    String date = arr.get(i).get("note_date");
+                                    String colour = arr.get(i).get("note_colour");
+                                    String id = arr.get(i).get("note_id");
+                                    Note note = new Note(title,body,date,colour,id);
+                                    notesBin.add(note);
+                                }
+                                saveData(notesBin,"bin");
+
                             }
                         } else {
                             Log.e("Error getting documents", "Unsuccessful in getting the data from fireStore");
@@ -188,14 +228,23 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
                 });
     }
 
-    private void saveData(ArrayList<Note> notes) {
+    private void saveData(ArrayList<Note> notes, String place) {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(notes);
-        editor.putString("notes",json);
+        editor.putString(place,json);
         editor.apply();
-        loadData();
+    }
+    public void loadBin(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences",MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("bin",null);
+        Type type = new TypeToken<ArrayList<Note>>() {}.getType();
+        notesBin = gson.fromJson(json,type);
+        if(notesBin == null){
+            notesBin = new ArrayList<Note>();
+        }
     }
     private void loadData(){
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences",MODE_PRIVATE);
@@ -204,7 +253,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<Note>>() {}.getType();
         notesArr = gson.fromJson(json,type);
         if(notesArr == null){
-            notesArr = new ArrayList<>();
+            notesArr = new ArrayList<Note>();
         }
     }
 

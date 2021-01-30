@@ -36,16 +36,59 @@ import java.util.Objects;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>{
 
     private ArrayList<Note> notesArr;
-    private ArrayList<Note> bin;
+    private ArrayList<Note> notesBin;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     
     // Constructor to get the array of items to this class
+    public RecyclerAdapter(ArrayList<Note> NotesArr,ArrayList<Note> notesBin){
+        Collections.sort(NotesArr, new NoteComparator());
+        this.notesArr = NotesArr;
+        this.notesBin = notesBin;
+    }
     public RecyclerAdapter(ArrayList<Note> NotesArr){
         Collections.sort(NotesArr, new NoteComparator());
         this.notesArr = NotesArr;
     }
+
+    private void delete(int position) {
+
+        Note note = this.notesArr.get(position);
+        this.notesBin.add(note);
+
+        this.notesArr.remove(position);
+
+
+
+        //Deleting Note from Firebase
+        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+
+        CollectionReference users = db.collection("users");
+        assert email != null;
+        int notesCount = notesArr.size();
+        users.document(email).update("notes",this.notesArr,"notesCount", notesCount,"bin",this.notesBin).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.e("DELETE","Success");
+                }else {
+                    Log.e("DELETE","Failed");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("DELETING NOTE", "Failed" + e);
+            }
+        });
+
+
+
+
+        this.setData(this.notesArr);
+    }
+
     class NoteComparator implements Comparator<Note> {
 
         @Override
@@ -94,45 +137,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     }
 
-    private void delete(int position) {
-        bin.add(this.notesArr.get(position));
 
-        this.notesArr.remove(position);
-
-
-
-        //Deleting Note from Firebase
-        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
-
-        CollectionReference users = db.collection("users");
-        assert email != null;
-        int notesCount = notesArr.size();
-        users.document(email).update("notes",this.notesArr,"notesCount", notesCount,"bin",this.bin).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Log.e("DELETE","Succes");
-                }else {
-                    Log.e("DELETE","Failed");
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("DELETING NOTE", "Failed" + e);
-            }
-        });
-
-
-
-
-        this.setData(notesArr);
-    }
 
     public void setData(ArrayList<Note> data){
         Collections.sort(data, new NoteComparator());
         this.notesArr = data;
-        notifyItemChanged(notesArr.size(),null);
+        notifyDataSetChanged();
+//        notifyItemChanged(notesArr.size(),null);
     }
 
     @Override
