@@ -47,6 +47,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         this.notesArr = NotesArr;
         this.notesBin = notesBin;
     }
+
     public RecyclerAdapter(ArrayList<Note> NotesArr){
         Collections.sort(NotesArr, new NoteComparator());
         this.notesArr = NotesArr;
@@ -89,8 +90,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         this.setData(this.notesArr);
     }
 
-    class NoteComparator implements Comparator<Note> {
-
+    static class NoteComparator implements Comparator<Note> {
         @Override
         public int compare(Note n1, Note n2) {
             return n2.getNote_date().compareTo(n1.getNote_date());

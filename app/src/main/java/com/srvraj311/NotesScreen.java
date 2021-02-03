@@ -177,7 +177,6 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         adapter.setData(notesArr);
-
     }
     private void getData() {
 
