@@ -94,11 +94,11 @@ public class NewNoteAdd extends AppCompatActivity {
         setColorListener(white , "#FFFFFF");
         setColorListener(grey , "#ACACAC");
         setColorListener(yellow , "#FFF171");
-        setColorListener(pink , "#FF4E8A");
+        setColorListener(pink , "#e090d3");
         setColorListener(cyan , "#427C83");
-        setColorListener(red , "#A52828");
+        setColorListener(red , "#ff7f7f");
         setColorListener(green , "#519F54");
-        setColorListener(purple , "#573593");
+        setColorListener(purple , "#aa90e0");
 
 
         //Initialising Array

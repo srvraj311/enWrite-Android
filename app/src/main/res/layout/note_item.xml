@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.circularreveal.cardview.CircularRevealCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxHeight="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
     android:paddingStart="10sp"
     android:paddingEnd="10sp"
     android:paddingTop="6sp"
+    android:layout_marginStart="12sp"
+    android:layout_marginEnd="12sp"
+    android:layout_marginBottom="8sp"
+    app:layout_goneMarginTop="8sp"
     android:layout_marginTop="3sp"
     android:layout_marginLeft="3sp"
     android:layout_marginRight="3sp"
+    app:cardElevation="10dp"
+    android:id="@+id/ViewHolderItem"
+    app:cardCornerRadius="20dp"
+    app:cardPreventCornerOverlap="true"
     >
-    <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ViewHolderItem"
-        card_view:cardElevation="20dp"
-        app:cardCornerRadius="10dp"
+
         android:paddingTop="8sp"
         android:paddingBottom="8sp"
-        app:cardBackgroundColor="@color/colorWhite"
         >
         <LinearLayout
+            android:id="@+id/note_holder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="8sp"
             android:layout_marginBottom="8sp"
-
             >
 
             <TextView
@@ -39,9 +46,9 @@
                 android:textSize="24sp"
                 android:textColor="@color/black"
                 style="@style/TextAppearance.AppCompat.Large"
-                android:paddingStart="10sp"
+                android:paddingStart="20sp"
                 android:paddingEnd="10sp"
-                android:paddingTop="10sp"
+
                 />
             <TextView
                 android:layout_width="match_parent"
@@ -51,13 +58,22 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 style="@style/ShapeAppearance.MaterialComponents.SmallComponent"
-                android:paddingStart="10sp"
+                android:paddingStart="20sp"
                 android:paddingEnd="10sp"
                 android:paddingBottom="10sp"
 
                 />
         </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2021-08-15 04:47:37.455"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/note_holder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.91"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
-
-</com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout>
