@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewNoteAdd"
+    tools:context=".NewNoteScreen.NewNoteAdd"
     android:background="@color/colorPrimaryBackground"
     android:orientation="vertical">
 
@@ -14,60 +14,27 @@
         android:nestedScrollingEnabled="true"
         android:minHeight="@dimen/activity_vertical_margin"
         android:paddingBottom="80dp"
-
         >
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top"
             android:orientation="vertical"
-
             >
-
-            <EditText
-
-                android:id="@+id/note_title"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="30dp"
-                android:background="#2B2B2B"
-                android:ems="10"
-                android:gravity="start"
-                android:hint="@string/title"
-                android:importantForAutofill="no"
-                android:inputType="text|textCapSentences"
-                android:padding="18dp"
-                android:paddingTop="25dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/colorPrimaryDark"
-                android:textSize="25sp"
-                />
-
-            <EditText
-                android:id="@+id/note"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/note_title"
-                android:layout_gravity="top|start"
-                android:background="#2B2B2B"
-                android:ems="10"
-                android:gravity="start"
-                android:hint="@string/enwrite_here"
-                android:importantForAutofill="no"
-                android:inputType="text|textMultiLine|textCapSentences"
-                android:minLines="25"
-                android:padding="20dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/colorPrimaryDark"
-                android:textSize="16sp" />
             <LinearLayout
+                android:id="@+id/color_chooser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/note"
                 android:orientation="horizontal"
+                android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:paddingStart="10dp">
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/note_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
 
                 <ImageView
                     android:id="@+id/whiteColor"
@@ -133,8 +100,60 @@
                     android:src="@drawable/ic_baseline_brightness_1_24"
                     app:tint="#573593" />
             </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/color_viewer"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                app:layout_constraintTop_toBottomOf="@id/color_chooser"
+                app:layout_constraintBottom_toTopOf="@id/note_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardBackgroundColor="@color/white"
+                />
+            <EditText
+                android:id="@+id/note_title"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:background="#2B2B2B"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="@string/title"
+                android:importantForAutofill="no"
+                android:inputType="text|textCapSentences"
+                android:padding="18dp"
+                android:paddingTop="25dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textSize="25sp"
+                app:layout_constraintTop_toBottomOf="@id/color_chooser"
+                app:layout_constraintBottom_toTopOf="@id/note"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+            <EditText
+                android:id="@+id/note"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/note_title"
+                android:layout_gravity="top|start"
+                android:background="#2B2B2B"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="@string/enwrite_here"
+                android:importantForAutofill="no"
+                android:inputType="text|textMultiLine|textCapSentences"
+                android:minLines="25"
+                android:padding="20dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/note_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 
@@ -153,7 +172,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:menu="@menu/save_app_bar_menu"
-        app:hideOnScroll="true"
+        app:hideOnScroll="false"
         android:nestedScrollingEnabled="true"
         app:navigationIcon="@drawable/ic_menu"
         app:fabAlignmentMode="end"

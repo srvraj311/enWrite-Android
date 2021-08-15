@@ -1,4 +1,4 @@
-package com.srvraj311;
+package com.srvraj311.Modal;
 
 public class UserHelperClass {
 

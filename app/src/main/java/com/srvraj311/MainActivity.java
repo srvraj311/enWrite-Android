@@ -4,14 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Date;
+import com.srvraj311.LoginScreen.LoginActivity;
+import com.srvraj311.NoteScreen.NotesScreen;
+import com.srvraj311.SignupScreen.SignUpActivity;
 
 public class MainActivity extends AppCompatActivity {
 

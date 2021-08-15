@@ -8,7 +8,7 @@
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
     android:background="#FFFFFF"
-    tools:context=".ProfileInfo">
+    tools:context=".SignupScreen.ProfileInfo">
 
     <TextView
         android:id="@+id/textView3"

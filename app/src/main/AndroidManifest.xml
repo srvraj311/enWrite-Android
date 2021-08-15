@@ -12,18 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ActivityDemo">
         <activity
-            android:name=".NotesScreen"
+            android:name=".NoteScreen.NotesScreen"
             android:label="@string/title_activity_notes_screen"
             android:theme="@style/Theme.ActivityDemo.NoActionBar" />
-        <activity android:name=".ProfileInfo" />
+        <activity android:name=".SignupScreen.ProfileInfo" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".LoginScreen.LoginActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".NewNoteAdd"
+            android:name=".NewNoteScreen.NewNoteAdd"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".SignupScreen.SignUpActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".MainActivity">
             <intent-filter>
