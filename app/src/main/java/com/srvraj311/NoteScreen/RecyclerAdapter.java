@@ -122,8 +122,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //delete(position);
-                Intent intent = new Intent(NewNoteAdd.class);
+                delete(position);
             }
         });
 
