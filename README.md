@@ -6,12 +6,12 @@ enWrite is an simple and clean web app for taking notes on the go and setting re
 - Reminders and Alarms with stylish datepicker
 - Cross Browser and Platform support
 
-![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1626325308/Screenshot_20210617-161559364_vhserh.jpg)
-![Image](https://res.cloudinary.com/srvraj311/image/upload/v1626325310/Screenshot_20210617-161616457_las4ub.jpg)
-![Image](https://res.cloudinary.com/srvraj311/image/upload/v1626325306/Screenshot_20210617-161723841_nguk5e.jpg)
-![Image](https://res.cloudinary.com/srvraj311/image/upload/v1626325307/Screenshot_20210617-161726623_fcnvok.jpg)
+![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1629315800/Screenshot_2021-08-18-22-23-13-281_com.srvraj311_x6f5ga.jpg)
+![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1629315800/Screenshot_2021-08-18-22-22-46-712_com.srvraj311_eyty8k.jpg)
+![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1629315800/Screenshot_2021-08-18-22-23-03-322_com.srvraj311_tqf8kk.jpg)
+![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1629315800/Screenshot_2021-08-18-22-22-55-060_com.srvraj311_qkpuyf.jpg)
 
 # New Features!
-- New intuitive login screen and Signup screen.
-- Implimented Syncronization with Firestore BD from Google Firebase.
-- Added ColourPicker during note pickup.
+- New Display UI for showing saved notes
+- Implemented Local Synchronization for offline usage
+- Added ColourPicker during note creating.
