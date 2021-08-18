@@ -1,5 +1,6 @@
 package com.srvraj311.NoteScreen;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,9 +23,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.srvraj311.Modal.Note;
+import com.srvraj311.Modal.TimeCalculator;
 import com.srvraj311.NewNoteScreen.NewNoteAdd;
 import com.srvraj311.R;
+import com.srvraj311.ViewNoteBottomSheet.ViewNote;
 
+import org.w3c.dom.Text;
+
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,17 +42,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     private ArrayList<Note> notesBin;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    Context context;
+    NotesScreen notesScreen;
 
     
     // Constructor to get the array of items to this class
-    public RecyclerAdapter(ArrayList<Note> NotesArr,ArrayList<Note> notesBin){
+    public RecyclerAdapter(Context context, ArrayList<Note> NotesArr,ArrayList<Note> notesBin, NotesScreen notesScreen){
         Collections.sort(NotesArr, new NoteComparator());
         this.notesArr = NotesArr;
         this.notesBin = notesBin;
+        this.context = context;
+        this.notesScreen = notesScreen;
     }
 
-    public RecyclerAdapter(ArrayList<Note> NotesArr){
+    public RecyclerAdapter(Context context, ArrayList<Note> NotesArr){
         Collections.sort(NotesArr, new NoteComparator());
+        this.context = context;
         this.notesArr = NotesArr;
     }
 
@@ -80,10 +91,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                 Log.e("DELETING NOTE", "Failed" + e);
             }
         });
-
-
-
-
         this.setData(this.notesArr);
     }
 
@@ -105,9 +112,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
-        String title = notesArr.get(position).getNote_title();
+        Note note = notesArr.get(position);
+        String title = note.getNote_title();
         holder.NoteTitle.setText(title);
-        String body = notesArr.get(position).getNote_body();
+        String body = note.getNote_body();
         holder.NoteBody.setText(body);
 
         //LONG PRESS ON CARD
@@ -122,15 +130,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delete(position);
+                ViewNote viewNote = new ViewNote(context, notesArr.get(position));
+                viewNote.show(notesScreen.getSupportFragmentManager(), viewNote.getTag());
             }
         });
 
 
         //Colour of the Holder
-        String color = notesArr.get(position).getNote_colour();
+        String color = note.getNote_colour();
         holder.cardView.setCardBackgroundColor(Color.parseColor(color));
 
+        String ts = note.getNote_date();
+        String t = TimeCalculator.getTimeAgo(Long.parseLong(ts));
+        holder.noteDate.setText(t);
 
     }
 
@@ -152,13 +164,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         private final TextView NoteTitle;
         private final TextView NoteBody;
         CircularRevealCardView cardView;
+        private TextView noteDate;
 
         public MyViewHolder(final View itemView) {
             super(itemView);
             NoteTitle = itemView.findViewById(R.id.NoteTitleViewHolder);
             NoteBody = itemView.findViewById(R.id.NoteBodyViewHolder);
             cardView = itemView.findViewById(R.id.ViewHolderItem);
-
+            noteDate = itemView.findViewById(R.id.note_date);
         }
     }
 }

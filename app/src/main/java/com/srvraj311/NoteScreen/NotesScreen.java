@@ -2,6 +2,7 @@ package com.srvraj311.NoteScreen;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,8 +23,10 @@ import com.srvraj311.MainActivity;
 import com.srvraj311.Modal.Note;
 import com.srvraj311.NewNoteScreen.NewNoteAdd;
 import com.srvraj311.R;
+import com.srvraj311.ViewNoteBottomSheet.ViewNote;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -124,7 +127,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
     }
 
     private void setAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(notesArr,notesBin);
+        RecyclerAdapter adapter = new RecyclerAdapter(getApplicationContext(), notesArr,notesBin, NotesScreen.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -142,7 +145,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
                         Note newNote = new Note(
                                 (String) documentSnapshot.get("note_title"),
                                 (String) documentSnapshot.get("note_body"),
-                                (String) documentSnapshot.get("note_body"),
+                                (String) documentSnapshot.get("note_date"),
                                 (String) documentSnapshot.get("note_colour"));
                         newData.add(newNote);
                     }

@@ -65,6 +65,7 @@
                 />
         </LinearLayout>
         <TextView
+            android:id="@+id/note_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2021-08-15 04:47:37.455"

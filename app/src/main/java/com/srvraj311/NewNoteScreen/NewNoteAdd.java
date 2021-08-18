@@ -148,8 +148,7 @@ public class NewNoteAdd extends AppCompatActivity {
 
     private void createNote() {
         //Generating Time String
-        Date date = new Date();
-        Timestamp ts = new Timestamp(date.getTime());
+        String ts = String.valueOf(System.currentTimeMillis());
 
         // Getting Text
             String title = noteTitleBox.getEditableText().toString();
@@ -157,7 +156,7 @@ public class NewNoteAdd extends AppCompatActivity {
             if(note.equals("") && title.equals("")){
                 Toast.makeText(getApplicationContext(),"Ahh !! What will i do with a Empty Note",Toast.LENGTH_LONG).show();
             }else {
-                Note newNote = new Note(title, note, ts.toString() , noteColor);
+                Note newNote = new Note(title, note, ts , noteColor);
                 updateNotesToFstore(newNote);
                 Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
             }
@@ -172,7 +171,7 @@ public class NewNoteAdd extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        RecyclerAdapter adapter = new RecyclerAdapter(notesArr);
+        RecyclerAdapter adapter = new RecyclerAdapter(getApplicationContext(), notesArr);
         adapter.setData(this.notesArr);
     }
 
