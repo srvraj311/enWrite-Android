@@ -125,10 +125,7 @@ public class ProfileInfo extends AppCompatActivity {
         HashMap<String, Object> person = new HashMap<>();
         person.put("email", currentEmail);
         person.put("name", nameData);
-        person.put("notes", new ArrayList<Note>(0));
-        person.put("bin", new ArrayList<Note>(0));
         person.put("notesCount", 0);
-
         users.document(currentEmail).set(person);
 
     }

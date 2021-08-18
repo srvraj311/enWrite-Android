@@ -61,39 +61,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         this.notesArr = NotesArr;
     }
 
-    private void delete(int position) {
-
-        Note note = this.notesArr.get(position);
-        this.notesBin.add(note);
-
-        this.notesArr.remove(position);
-
-
-
-        //Deleting Note from Firebase
-        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
-
-        CollectionReference users = db.collection("users");
-        assert email != null;
-        int notesCount = notesArr.size();
-        users.document(email).update("notes",this.notesArr,"notesCount", notesCount,"bin",this.notesBin).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Log.e("DELETE","Success");
-                }else {
-                    Log.e("DELETE","Failed");
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("DELETING NOTE", "Failed" + e);
-            }
-        });
-        this.setData(this.notesArr);
-    }
-
     static class NoteComparator implements Comparator<Note> {
         @Override
         public int compare(Note n1, Note n2) {
@@ -106,7 +73,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.note_item,parent,false);
         return new MyViewHolder(itemView);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -130,7 +96,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewNote viewNote = new ViewNote(context, notesArr.get(position));
+                ViewNote viewNote = new ViewNote(context, notesArr.get(position), notesScreen);
                 viewNote.show(notesScreen.getSupportFragmentManager(), viewNote.getTag());
             }
         });

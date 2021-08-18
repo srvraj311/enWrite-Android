@@ -134,7 +134,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.setData(notesArr);
     }
-    private void getData() {
+    public void getData() {
         CollectionReference users = db.collection("users");
         users.document(umail).collection("note").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -146,7 +146,8 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
                                 (String) documentSnapshot.get("note_title"),
                                 (String) documentSnapshot.get("note_body"),
                                 (String) documentSnapshot.get("note_date"),
-                                (String) documentSnapshot.get("note_colour"));
+                                (String) documentSnapshot.get("note_colour"),
+                                (String) documentSnapshot.get("note_id"));
                         newData.add(newNote);
                     }
                     Collections.sort(newData, new NoteComparator());

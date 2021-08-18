@@ -30,6 +30,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.model.Document;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.srvraj311.Modal.Note;
@@ -157,6 +158,7 @@ public class NewNoteAdd extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Ahh !! What will i do with a Empty Note",Toast.LENGTH_LONG).show();
             }else {
                 Note newNote = new Note(title, note, ts , noteColor);
+                System.out.println(newNote.getNote_id());
                 updateNotesToFstore(newNote);
                 Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
             }
@@ -181,18 +183,18 @@ public class NewNoteAdd extends AppCompatActivity {
 
         CollectionReference users = db.collection("users");
         assert email != null;
-        users.document(email).collection("note").add(newNote)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        users.document(email).collection("note").document(newNote.getNote_id()).set(newNote)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Log.e("CREATE NOTE", "Successfull");
+                            Log.e("CREATE NOTE", "Successful");
                             finish();
-                    }else{
+                        }else{
                             Log.e("CREATE NOTE", "FAILED");
                         }
-                }
-            });
+                    }
+                });
     }
 
     private void clearInputs () {
