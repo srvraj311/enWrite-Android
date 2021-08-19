@@ -2,6 +2,7 @@ package com.srvraj311.ViewNoteBottomSheet;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import com.srvraj311.Modal.Note;
 import com.srvraj311.Modal.TimeCalculator;
 import com.srvraj311.NoteScreen.NotesScreen;
 import com.srvraj311.R;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -45,8 +48,10 @@ public class ViewNote extends BottomSheetDialogFragment {
     private TextView noteBody;
     private TextView noteTime;
     private CardView noteBg;
-    BottomNavigationView bottomAppBar;
     private NotesScreen notesScreen;
+    ImageButton editButton;
+    ImageButton deleteButton;
+    ImageButton pinButton;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +81,9 @@ public class ViewNote extends BottomSheetDialogFragment {
         noteBody = view.findViewById(R.id.note_body);
         noteTime = view.findViewById(R.id.note_date);
         noteBg = view.findViewById(R.id.noteDetailsBottomSheet);
-        bottomAppBar = view.findViewById(R.id.bottomToolbar);
+        pinButton = view.findViewById(R.id.pin_note);
+        deleteButton = view.findViewById(R.id.delete_note);
+        editButton = view.findViewById(R.id.edit_note);
 
         // Assigners
         noteTitle.setText(note.getNote_title());
@@ -86,28 +93,62 @@ public class ViewNote extends BottomSheetDialogFragment {
         long timeStamp = Long.parseLong(note.getNote_date());
         noteTime.setText(String.valueOf(TimeCalculator.getTimeAgo(timeStamp)));
         noteBg.setCardBackgroundColor(Color.parseColor(note.getNote_colour()));
-        bottomAppBar.setBackgroundColor(Color.parseColor(note.getNote_colour()));
-        bottomAppBar.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.edit_note:
-                        Log.e(TAG, "Edit Note");
-                        return true;
-                    case R.id.delete_note:
-                        deleteNote(note);
-                        return true;
-                    case R.id.pin_note:
-                        Log.e(TAG, "Pin Note");
-                        return true;
-                }
-                return false;
+            public void onClick(View view) {
+                deleteNote(note);
             }
         });
+        if(note.isPinned()) {
+            pinButton.setImageResource(R.drawable.ic_baseline_favorite_24);
+        }
+        else pinButton.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+
+        pinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                note.setPinned(!note.isPinned());
+                if(note.isPinned()) {
+                    pinButton.setImageResource(R.drawable.ic_baseline_favorite_24);
+                }
+                else pinButton.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                CollectionReference n = db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())).collection("note");
+                n.document(note.getNote_id()).set(note).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        String s = "";
+                        if(note.isPinned()) s = "Pinned";
+                        else s = "Unpinned";
+                        if(note.isPinned()) {
+                            pinButton.setImageResource(R.drawable.ic_baseline_favorite_24);
+                        }
+                        else pinButton.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                        Toast.makeText(getContext(), "Note " + s, Toast.LENGTH_LONG).show();
+                        notesScreen.getData();
+                        closeBottomSheet();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        String s = "";
+                        if(note.isPinned()) s = "Pin";
+                        else s = "Unpin";
+                        Toast.makeText(getContext(), "Note " + s + " failed", Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                        closeBottomSheet();
+                    }
+                });
+            }
+        });
+
     }
 
     private void deleteNote(Note note) {
-        CollectionReference n = db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())).collection("note");
+        CollectionReference n = db.collection("users")
+                .document(Objects.requireNonNull(Objects.requireNonNull(mAuth.getCurrentUser())
+                .getEmail()))
+                .collection("note");
         n.document(note.getNote_id()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

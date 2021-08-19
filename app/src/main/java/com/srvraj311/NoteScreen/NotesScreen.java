@@ -4,14 +4,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.ImageButton;
+import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -54,6 +59,10 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeDown;
     RecyclerView pinnedNotesRecycler;
+    TextInputEditText searchBox;
+    ImageButton clearSearch;
+    TextView pinTitle;
+    TextView unPinTitle;
 
 
     @Override
@@ -63,7 +72,10 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         recyclerView = findViewById(R.id.recylerViewHolder);
         swipeDown = findViewById(R.id.swipe_container);
         pinnedNotesRecycler = findViewById(R.id.recylerViewHolder2);
-
+        clearSearch = findViewById(R.id.clear_search);
+        searchBox = findViewById(R.id.search_notes);
+        pinTitle = findViewById(R.id.pin_title);
+        unPinTitle = findViewById(R.id.unpin_title);
         addBtn = findViewById(R.id.addBtn);
         addBtn.bringToFront();
         addBtn.setOnClickListener(new View.OnClickListener() {
@@ -104,12 +116,44 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 swipeDown.setRefreshing(true);
-                setAdapter();
+                setAdapter(notesArr);
+                searchBox.setText("");
                 swipeDown.setRefreshing(false);
             }
         });
 
-        setAdapter();
+        searchBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                ArrayList<Note> filteredArr = new ArrayList<>();
+                for(Note note : notesArr){
+                    if (note.getNote_title().toLowerCase().contains(charSequence) || note.getNote_body().toLowerCase().contains(charSequence) || note.getNote_date().toLowerCase().contains(charSequence)){
+                        filteredArr.add(note);
+                    }
+                }
+                setAdapter(filteredArr);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        clearSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchBox.setText("");
+                setAdapter(notesArr);
+            }
+        });
+
+        setAdapter(notesArr);
     }
 
 
@@ -128,9 +172,13 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         }
     }
 
-    private void setAdapter() {
+    private void setAdapter(ArrayList<Note> notesArr) {
         ArrayList<Note> pinned = getPinnedNotes(notesArr);
         ArrayList<Note> unPinned = getUnPinnedNotes(notesArr);
+        if(pinned.size() == 0) pinTitle.setVisibility(View.INVISIBLE);
+        else pinTitle.setVisibility(View.VISIBLE);
+        if(unPinned.size() == 0) unPinTitle.setVisibility(View.INVISIBLE);
+        else unPinTitle.setVisibility(View.VISIBLE);
 
         RecyclerAdapter adapter = new RecyclerAdapter(getApplicationContext(), unPinned, NotesScreen.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -187,7 +235,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
                     }
                     Collections.sort(newData, new NoteComparator());
                     notesArr = newData;
-                    setAdapter();
+                    setAdapter(notesArr);
                     saveData(newData, "localNotes");
                 }
             }
@@ -210,23 +258,13 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         editor.putString(place,json);
         editor.apply();
     }
-    public void loadBin(){
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences",MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("bin",null);
-        Type type = new TypeToken<ArrayList<Note>>() {}.getType();
-        notesBin = gson.fromJson(json,type);
-        if(notesBin == null){
-            notesBin = new ArrayList<Note>();
-        }
-    }
     private void loadData(){
         SharedPreferences sharedPreferences = getSharedPreferences("Notes",MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("localNotes",null);
         Type type = new TypeToken<ArrayList<Note>>() {}.getType();
         notesArr = gson.fromJson(json,type);
-        setAdapter();
+        setAdapter(notesArr);
     }
 
 

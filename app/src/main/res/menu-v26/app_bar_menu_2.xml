@@ -10,22 +10,17 @@
         app:showAsAction="never"
         android:iconTint="@color/colorPrimaryBackground"
         />
-    <item android:id="@+id/menuAbout"
-        android:title="@string/about"
-        android:icon="@drawable/ic_info"
-        app:showAsAction="never"
-        android:iconTint="@color/colorPrimaryBackground"
-        />
-    <item android:id="@+id/menuSearch"
-        android:icon="@drawable/ic_search"
-        android:title="@string/search"
-        app:showAsAction="always"
-        android:iconTint="@color/colorPrimaryBackground"
-        />
+
     <item android:id="@+id/menuLogout"
         android:icon="@drawable/ic_logout"
         android:title="@string/logout"
         app:showAsAction="never"
         android:iconTint="@color/colorPrimaryBackground"
         />
+    <item android:id="@+id/menuAbout"
+          android:title="@string/about"
+          android:icon="@drawable/ic_baseline_account_circle_24"
+          app:showAsAction="always"
+          android:iconTint="@color/colorPrimaryBackground"
+            />
 </menu>

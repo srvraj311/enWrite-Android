@@ -4,28 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.srvraj311.NoteScreen.NotesScreen"
     >
-    <item android:id="@+id/menuSearch"
-        android:icon="@drawable/ic_search"
-        android:title="@string/search"
-        app:showAsAction="always"
-        android:iconTint="@color/colorPrimaryBackground"
-        />
     <item android:id="@+id/menuSettings"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
         app:showAsAction="never"
         android:iconTint="@color/colorPrimaryBackground"
         />
-    <item android:id="@+id/menuAbout"
-        android:title="@string/about"
-        android:icon="@drawable/ic_info"
-        app:showAsAction="never"
-        android:iconTint="@color/colorPrimaryBackground"
-        />
+
     <item android:id="@+id/menuLogout"
         android:icon="@drawable/ic_logout"
         android:title="@string/logout"
         app:showAsAction="never"
         android:iconTint="@color/colorPrimaryBackground"
         />
+    <item android:id="@+id/menuAbout"
+          android:title="@string/about"
+          android:icon="@drawable/ic_baseline_account_circle_24"
+          app:showAsAction="always"
+          android:iconTint="@color/colorPrimaryBackground"
+            />
 </menu>

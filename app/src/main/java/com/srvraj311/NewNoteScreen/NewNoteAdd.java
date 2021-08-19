@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -64,6 +65,7 @@ public class NewNoteAdd extends AppCompatActivity {
     ImageView green;
     ImageView purple;
     String noteColor;
+    CoordinatorLayout parent;
 
     BottomAppBar bottomAppBar;
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -90,6 +92,7 @@ public class NewNoteAdd extends AppCompatActivity {
         red = findViewById(R.id.redColor);
         green = findViewById(R.id.greenColor);
         purple = findViewById(R.id.purpleColor);
+        parent = findViewById(R.id.parent);
 
         // Setting Color Changers
         setColorListener(white , "#FFFFFF");
@@ -140,6 +143,13 @@ public class NewNoteAdd extends AppCompatActivity {
                     @Override
                     public void run() {
                         colorViewer.setCardBackgroundColor(Color.parseColor(color));
+                        noteTitleBox.setBackgroundColor(Color.parseColor(color));
+                        noteBodyBox.setBackgroundColor(Color.parseColor(color));
+                        parent.setBackgroundColor(Color.parseColor(color));
+                            noteTitleBox.setHintTextColor(Color.BLACK);
+                            noteBodyBox.setHintTextColor(Color.BLACK);
+                            noteTitleBox.setTextColor(Color.BLACK);
+                            noteBodyBox.setTextColor(Color.BLACK);
                     }
                 });
 
