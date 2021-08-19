@@ -47,7 +47,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     
     // Constructor to get the array of items to this class
-    public RecyclerAdapter(Context context, ArrayList<Note> NotesArr,ArrayList<Note> notesBin, NotesScreen notesScreen){
+    public RecyclerAdapter(Context context, ArrayList<Note> NotesArr, NotesScreen notesScreen){
         Collections.sort(NotesArr, new NoteComparator());
         this.notesArr = NotesArr;
         this.notesBin = notesBin;

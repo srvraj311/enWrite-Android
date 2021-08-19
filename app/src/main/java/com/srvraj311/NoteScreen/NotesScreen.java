@@ -53,6 +53,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
 
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeDown;
+    RecyclerView pinnedNotesRecycler;
 
 
     @Override
@@ -61,6 +62,7 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         setContentView(R.layout.notes_screen);
         recyclerView = findViewById(R.id.recylerViewHolder);
         swipeDown = findViewById(R.id.swipe_container);
+        pinnedNotesRecycler = findViewById(R.id.recylerViewHolder2);
 
         addBtn = findViewById(R.id.addBtn);
         addBtn.bringToFront();
@@ -127,13 +129,45 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
     }
 
     private void setAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(getApplicationContext(), notesArr,notesBin, NotesScreen.this);
+        ArrayList<Note> pinned = getPinnedNotes(notesArr);
+        ArrayList<Note> unPinned = getUnPinnedNotes(notesArr);
+
+        RecyclerAdapter adapter = new RecyclerAdapter(getApplicationContext(), unPinned, NotesScreen.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        adapter.setData(notesArr);
+        adapter.setData(unPinned);
+
+        RecyclerAdapter adapter1 = new RecyclerAdapter(getApplicationContext(), pinned, NotesScreen.this);
+        RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext());
+        pinnedNotesRecycler.setLayoutManager(layoutManager1);
+        pinnedNotesRecycler.setItemAnimator(new DefaultItemAnimator());
+        pinnedNotesRecycler.setAdapter(adapter1);
+        adapter1.setData(pinned);
     }
+
+    private ArrayList<Note> getPinnedNotes(ArrayList<Note> notesArr) {
+        ArrayList<Note> pinned = new ArrayList<>();
+        for(Note note : notesArr){
+            if(note.isPinned()){
+                pinned.add(note);
+            }
+        }
+        return pinned;
+    }
+
+    private ArrayList<Note> getUnPinnedNotes(ArrayList<Note> notesArr) {
+        ArrayList<Note> unPinned = new ArrayList<>();
+        for(Note note : notesArr){
+            if(!note.isPinned()){
+                System.out.println(note.getNote_title());
+                unPinned.add(note);
+            }
+        }
+        return unPinned;
+    }
+
     public void getData() {
         CollectionReference users = db.collection("users");
         users.document(umail).collection("note").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -147,7 +181,8 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
                                 (String) documentSnapshot.get("note_body"),
                                 (String) documentSnapshot.get("note_date"),
                                 (String) documentSnapshot.get("note_colour"),
-                                (String) documentSnapshot.get("note_id"));
+                                (String) documentSnapshot.get("note_id"),
+                                Boolean.parseBoolean(String.valueOf(documentSnapshot.get("pinned"))));
                         newData.add(newNote);
                     }
                     Collections.sort(newData, new NoteComparator());

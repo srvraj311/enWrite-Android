@@ -9,8 +9,9 @@ public class Note {
     private String note_body;
     private String note_date;
     private String note_colour;
+    private boolean pinned;
 
-    public Note(String note_title, String note_body, String note_date, String note_colour) {
+    public Note(String note_title, String note_body, String note_date, String note_colour, boolean pinned) {
         this.note_title = note_title;
         this.note_body = note_body;
         this.note_date = note_date;
@@ -18,9 +19,11 @@ public class Note {
         // Generate Random ID
         UUID uniqueKey = UUID.randomUUID();
         this.note_id = String.valueOf(uniqueKey);
+        this.pinned = pinned;
     }
     //New note without Colour
-    public Note(String note_title, String note_body, String note_date) {
+    public Note(String note_title, String note_body, String note_date, boolean pinned) {
+        this.pinned = pinned;
         this.note_title = note_title;
         this.note_body = note_body;
         this.note_date = note_date;
@@ -31,12 +34,13 @@ public class Note {
     }
 
     // To update the existing note
-    public Note(String note_title, String note_body, String note_date,String note_colour, String note_id) {
+    public Note(String note_title, String note_body, String note_date,String note_colour, String note_id, boolean pinned) {
         this.note_title = note_title;
         this.note_body = note_body;
         this.note_date = note_date;
         this.note_colour = note_colour;
         this.note_id = note_id;
+        this.pinned = pinned;
     }
 
     public String getNote_id() {
@@ -78,4 +82,12 @@ public class Note {
     public void setNote_colour(String note_colour) {
         this.note_colour = note_colour;
     }
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
+    }
+
 }

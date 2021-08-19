@@ -22,43 +22,63 @@
     android:layout_marginTop="8sp"
     android:layout_marginBottom="12sp">
 
+<!--        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--            android:id="@+id/swipe_container"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:id="@+id/recylerViewHolder"-->
+<!--                />-->
+<!--        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 
-<!--    <com.google.android.material.appbar.MaterialToolbar-->
-<!--        android:id="@+id/topBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:menu="@menu/app_bar_menu_2"-->
-<!--        android:background="@color/colorPrimary"-->
-
-<!--        >-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/searchBarText"-->
-<!--            android:layout_width="250dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:hint="@string/search"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textColorHint="@color/black"-->
-<!--            android:textSize="18sp"-->
-<!--            android:visibility="gone"/>-->
-<!--    </com.google.android.material.appbar.MaterialToolbar>-->
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:id="@+id/recylerViewHolder"
-                >
-
-            </androidx.recyclerview.widget.RecyclerView>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>
 
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pinned"
+                    android:padding="12dp"
+                    android:fontFamily="@font/actor"
+                    android:textSize="16sp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/recylerViewHolder2"
+                    />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_notes"
+                    android:padding="12dp"
+                    android:fontFamily="@font/actor"
+                    android:textSize="16sp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:paddingTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/recylerViewHolder"
+                    android:paddingBottom="60dp"
+                    />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -66,14 +86,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-
         app:menu="@menu/app_bar_menu_2"
         app:hideOnScroll="true"
         app:navigationIcon="@drawable/ic_menu"
         app:fabAlignmentMode="end"
         app:fabCradleMargin="10dp"
         />
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addBtn"

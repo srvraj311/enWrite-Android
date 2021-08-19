@@ -157,7 +157,7 @@ public class NewNoteAdd extends AppCompatActivity {
             if(note.equals("") && title.equals("")){
                 Toast.makeText(getApplicationContext(),"Ahh !! What will i do with a Empty Note",Toast.LENGTH_LONG).show();
             }else {
-                Note newNote = new Note(title, note, ts , noteColor);
+                Note newNote = new Note(title, note, ts , noteColor, false);
                 System.out.println(newNote.getNote_id());
                 updateNotesToFstore(newNote);
                 Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();

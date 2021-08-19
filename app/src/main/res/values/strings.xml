@@ -50,4 +50,6 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="pin">Pin</string>
+    <string name="pinned">Pinned Notes</string>
+    <string name="my_notes">My Notes</string>
 </resources>
