@@ -7,7 +7,7 @@ enWrite is an simple and clean web app for taking notes on the go and setting re
 - Cross Browser and Platform support
 
 ![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1629315800/Screenshot_2021-08-18-22-23-13-281_com.srvraj311_x6f5ga.jpg)
-![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1629315800/Screenshot_2021-08-18-22-22-46-712_com.srvraj311_eyty8k.jpg)
+![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1630057072/WhatsApp_Image_2021-08-27_at_3.05.49_PM_jwjdme.jpg)
 ![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1629315800/Screenshot_2021-08-18-22-23-03-322_com.srvraj311_tqf8kk.jpg)
 ![N|Solid](https://res.cloudinary.com/srvraj311/image/upload/v1629315800/Screenshot_2021-08-18-22-22-55-060_com.srvraj311_qkpuyf.jpg)
 
