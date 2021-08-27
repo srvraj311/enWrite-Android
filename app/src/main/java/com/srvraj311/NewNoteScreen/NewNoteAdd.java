@@ -28,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -66,6 +67,9 @@ public class NewNoteAdd extends AppCompatActivity {
     ImageView purple;
     String noteColor;
     CoordinatorLayout parent;
+    boolean is_edit;
+    String oldNoteId;
+    Note editedNote;
 
     BottomAppBar bottomAppBar;
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -74,8 +78,12 @@ public class NewNoteAdd extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_note);
         mAuth = FirebaseAuth.getInstance();
-
         // Initiating Per user Database and Setting the Current Data Set of notes from the cloud
+        is_edit = (boolean) getIntent().getExtras().get("is_edit");
+        if(is_edit) {
+            oldNoteId = getIntent().getStringExtra("note_id");
+            setNotesToDisplay(oldNoteId);
+        }
 
         noteColor = "#FFFFFF";
         // Hooks
@@ -134,6 +142,51 @@ public class NewNoteAdd extends AppCompatActivity {
 
     }
 
+    private void setNotesToDisplay(String oldNoteId) {
+        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+        CollectionReference users = db.collection("users");
+        assert email != null;
+        users.document(email).collection("note").document(oldNoteId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot doc = task.getResult();
+                            String title = (String) doc.get("note_title");
+                            String body = (String) doc.get("note_body");
+                            String color = (String) doc.get("note_colour");
+                            boolean pinned = false;
+                            try {
+                                pinned = (boolean) doc.get("pinned");
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            String date = (String) doc.get("note_date");
+                            String id = (String) doc.get("note_id");
+                            Note note = new Note(title, body, date, color, id, pinned);
+                            editedNote = note;
+                            Log.e("NOTE GET", note.toString());
+                            noteTitleBox.setText(title);
+                            noteBodyBox.setText(body);
+                            noteColor = color;
+                            colorViewer.setCardBackgroundColor(Color.parseColor(color));
+                            noteTitleBox.setBackgroundColor(Color.parseColor(color));
+                            noteBodyBox.setBackgroundColor(Color.parseColor(color));
+                            parent.setBackgroundColor(Color.parseColor(color));
+                            noteTitleBox.setHintTextColor(Color.BLACK);
+                            noteBodyBox.setHintTextColor(Color.BLACK);
+                            noteTitleBox.setTextColor(Color.BLACK);
+                            noteBodyBox.setTextColor(Color.BLACK);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("Get New Note", "Failed to Get Details of Note that you want to edit");
+            }
+        });
+    }
+
     private void setColorListener(ImageView btn, String color){
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +214,21 @@ public class NewNoteAdd extends AppCompatActivity {
         //Generating Time String
         String ts = String.valueOf(System.currentTimeMillis());
 
+        if(is_edit){
+            editedNote.setNote_date(ts);
+            editedNote.setNote_colour(noteColor);
+            editedNote.setNote_title(noteTitleBox.getText().toString());
+            editedNote.setNote_body(noteBodyBox.getText().toString());
+
+            if(noteTitleBox.getText().toString().equals("") && noteBodyBox.getText().toString().equals("")){
+                Toast.makeText(getApplicationContext(),"Ahh !! What will i do with a Empty Note",Toast.LENGTH_LONG).show();
+                return;
+            }else {
+                updateNotesToFstore(editedNote);
+                Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
         // Getting Text
             String title = noteTitleBox.getEditableText().toString();
             String note = noteBodyBox.getEditableText().toString();
@@ -188,23 +256,42 @@ public class NewNoteAdd extends AppCompatActivity {
     }
 
     private void updateNotesToFstore(Note newNote) {
-        // Then ran an update function with document id
-        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
 
-        CollectionReference users = db.collection("users");
-        assert email != null;
-        users.document(email).collection("note").document(newNote.getNote_id()).set(newNote)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Log.e("CREATE NOTE", "Successful");
-                            finish();
-                        }else{
-                            Log.e("CREATE NOTE", "FAILED");
+        if(!is_edit) {
+            // Then ran an update function with document id
+            String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+            CollectionReference users = db.collection("users");
+            assert email != null;
+            users.document(email).collection("note").document(newNote.getNote_id()).set(newNote)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.e("CREATE NOTE", "Successful");
+                                finish();
+                            } else {
+                                Log.e("CREATE NOTE", "FAILED");
+                            }
                         }
-                    }
-                });
+                    });
+        }else{
+            // Then ran an update function with document id
+            String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+            CollectionReference users = db.collection("users");
+            assert email != null;
+            users.document(email).collection("note").document(oldNoteId).set(editedNote)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.e("EDIT NOTE", "Successful");
+                                finish();
+                            } else {
+                                Log.e("EDIT NOTE", "FAILED");
+                            }
+                        }
+                    });
+        }
     }
 
     private void clearInputs () {

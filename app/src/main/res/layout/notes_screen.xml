@@ -43,6 +43,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/rounded_corners_white"
                 android:hint="@string/search"
+                android:textColorHint="@color/colorPrimaryDark"
                 android:paddingStart="25dp"
                 android:paddingEnd="0dp"
                 android:layout_marginEnd="60dp"
@@ -74,30 +75,52 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:orientation="vertical">
-                <TextView
-                        android:id="@+id/pin_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                <com.google.android.material.chip.ChipGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pin_chip_holder"
+                    android:layout_marginTop="10dp"
+                    app:singleSelection="true"
+                    android:layout_marginStart="20dp"
+                    >
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/all_chip"
+                        android:layout_height="55dp"
+                        app:chipBackgroundColor="@color/white"
+                        app:chipEndPadding="8dp"
+                        app:chipIconEnabled="true"
+                        android:layout_width="wrap_content"
+                        android:textColor="@color/colorPrimaryBackground"
+                        android:text="@string/all_notes"
+                        app:checkedIconVisible="false"
+                        app:chipIconSize="19sp"
+                        app:iconEndPadding="5dp"
+                        app:chipIconTint="@color/colorAccent"
+                        app:iconStartPadding="5dp"
+                        app:chipStrokeColor="@color/colorAccent"
+                        app:chipStrokeWidth="1dp"
+                        app:chipIcon="@drawable/ic_baseline_sticky_note_2_24"
+                        android:checkable="true"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/pin_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
                         android:text="@string/pinned"
-                        android:paddingTop="12dp"
-                        android:textAlignment="center"
-                        android:fontFamily="@font/actor"
-                        android:textSize="16sp"/>
-                <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:id="@+id/recylerViewHolder2"
-                        />
-                <TextView
-                        android:id="@+id/unpin_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/my_notes"
-                        android:textAlignment="center"
-                        android:paddingTop="12dp"
-                        android:fontFamily="@font/actor"
-                        android:textSize="16sp"/>
+                        android:checkable="true"
+                        app:chipBackgroundColor="@color/white"
+                        app:chipEndPadding="8dp"
+                        app:chipIconEnabled="true"
+                        app:iconStartPadding="5dp"
+                        android:textColor="@color/colorPrimaryBackground"
+                        app:checkedIconVisible="false"
+                        app:chipIconTint="@color/colorPrimaryBackground"
+                        app:chipIconSize="19sp"
+                        app:chipIcon="@drawable/ic_baseline_push_pin_24"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"/>
+                </com.google.android.material.chip.ChipGroup>
+
                 <androidx.recyclerview.widget.RecyclerView
                         android:paddingTop="5dp"
                         android:layout_width="match_parent"
@@ -106,6 +129,7 @@
                         android:id="@+id/recylerViewHolder"
                         android:paddingBottom="60dp"
                         android:elevation="20dp"
+                    tools:listitem="@layout/note_item"
                         />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
@@ -124,7 +148,7 @@
         app:hideOnScroll="true"
         app:navigationIcon="@drawable/ic_menu"
         app:fabAlignmentMode="end"
-        app:fabCradleMargin="10dp"
+        app:fabCradleMargin="8dp"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -139,7 +163,5 @@
         app:maxImageSize="35dp"
         app:rippleColor="@color/colorPrimary"
         />
-
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

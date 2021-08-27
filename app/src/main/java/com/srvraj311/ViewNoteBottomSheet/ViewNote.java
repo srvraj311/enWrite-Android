@@ -1,6 +1,7 @@
 package com.srvraj311.ViewNoteBottomSheet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.srvraj311.Modal.Note;
 import com.srvraj311.Modal.TimeCalculator;
+import com.srvraj311.NewNoteScreen.NewNoteAdd;
 import com.srvraj311.NoteScreen.NotesScreen;
 import com.srvraj311.R;
 import org.jetbrains.annotations.NotNull;
@@ -139,6 +141,17 @@ public class ViewNote extends BottomSheetDialogFragment {
                         closeBottomSheet();
                     }
                 });
+            }
+        });
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, NewNoteAdd.class);
+                intent.putExtra("note_id", note.getNote_id());
+                intent.putExtra("is_edit", true);
+                startActivity(intent);
+                dismiss();
             }
         });
 

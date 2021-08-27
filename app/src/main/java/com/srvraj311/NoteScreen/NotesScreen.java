@@ -2,6 +2,7 @@ package com.srvraj311.NoteScreen;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,11 +61,13 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
 
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeDown;
-    RecyclerView pinnedNotesRecycler;
     TextInputEditText searchBox;
     ImageButton clearSearch;
     TextView pinTitle;
     TextView unPinTitle;
+    ChipGroup chipGroup;
+    Chip pinnedChip;
+    Chip allPinned;
 
 
     @Override
@@ -71,20 +76,21 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         setContentView(R.layout.notes_screen);
         recyclerView = findViewById(R.id.recylerViewHolder);
         swipeDown = findViewById(R.id.swipe_container);
-        pinnedNotesRecycler = findViewById(R.id.recylerViewHolder2);
         clearSearch = findViewById(R.id.clear_search);
         searchBox = findViewById(R.id.search_notes);
-        pinTitle = findViewById(R.id.pin_title);
-        unPinTitle = findViewById(R.id.unpin_title);
         addBtn = findViewById(R.id.addBtn);
         addBtn.bringToFront();
+        chipGroup = findViewById(R.id.pin_chip_holder);
+        pinnedChip = findViewById(R.id.pin_chip);
+        allPinned = findViewById(R.id.all_chip);
+
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NotesScreen.this, NewNoteAdd.class);
+                intent.putExtra("is_edit", false);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-
             }
         });
         toolbar = findViewById(R.id.bottomAppBar);
@@ -154,6 +160,34 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         });
 
         setAdapter(notesArr);
+
+        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                Chip chip = (Chip) findViewById(checkedId);
+                if(chip == null) return;
+                switch (chip.getId()){
+                    case R.id.pin_chip:
+                        setAdapter(getPinnedNotes(notesArr));
+                        pinnedChip.setChipStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                        pinnedChip.setChipStrokeWidth(3);
+                        pinnedChip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                        allPinned.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryBackground)));
+                        allPinned.setChipStrokeWidth(0);
+
+                        break;
+                    case R.id.all_chip:
+                        setAdapter(notesArr);
+                        allPinned.setChipStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                        allPinned.setChipStrokeWidth(3);
+                        allPinned.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                        pinnedChip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryBackground)));
+                        pinnedChip.setChipStrokeWidth(0);
+                        break;
+                    default:setAdapter(notesArr);
+                }
+            }
+        });
     }
 
 
@@ -172,27 +206,14 @@ public class NotesScreen<mAuth> extends AppCompatActivity {
         }
     }
 
-    private void setAdapter(ArrayList<Note> notesArr) {
-        ArrayList<Note> pinned = getPinnedNotes(notesArr);
-        ArrayList<Note> unPinned = getUnPinnedNotes(notesArr);
-        if(pinned.size() == 0) pinTitle.setVisibility(View.INVISIBLE);
-        else pinTitle.setVisibility(View.VISIBLE);
-        if(unPinned.size() == 0) unPinTitle.setVisibility(View.INVISIBLE);
-        else unPinTitle.setVisibility(View.VISIBLE);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(getApplicationContext(), unPinned, NotesScreen.this);
+    private void setAdapter(ArrayList<Note> notesArr) {
+        RecyclerAdapter adapter = new RecyclerAdapter(getApplicationContext(), notesArr, NotesScreen.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        adapter.setData(unPinned);
-
-        RecyclerAdapter adapter1 = new RecyclerAdapter(getApplicationContext(), pinned, NotesScreen.this);
-        RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext());
-        pinnedNotesRecycler.setLayoutManager(layoutManager1);
-        pinnedNotesRecycler.setItemAnimator(new DefaultItemAnimator());
-        pinnedNotesRecycler.setAdapter(adapter1);
-        adapter1.setData(pinned);
+        adapter.setData(notesArr);
     }
 
     private ArrayList<Note> getPinnedNotes(ArrayList<Note> notesArr) {

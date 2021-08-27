@@ -90,4 +90,15 @@ public class Note {
         this.pinned = pinned;
     }
 
+    @Override
+    public String toString() {
+        return "Note{" +
+                "note_id='" + note_id + '\'' +
+                ", note_title='" + note_title + '\'' +
+                ", note_body='" + note_body + '\'' +
+                ", note_date='" + note_date + '\'' +
+                ", note_colour='" + note_colour + '\'' +
+                ", pinned=" + pinned +
+                '}';
+    }
 }

@@ -52,4 +52,5 @@
     <string name="pin">Pin</string>
     <string name="pinned">Pinned Notes</string>
     <string name="my_notes">My Notes</string>
+    <string name="all_notes">All Notes</string>
 </resources>
