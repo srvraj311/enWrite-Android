@@ -107,7 +107,7 @@ public class NewNoteAdd extends AppCompatActivity {
         setColorListener(grey , "#ACACAC");
         setColorListener(yellow , "#FFF171");
         setColorListener(pink , "#e090d3");
-        setColorListener(cyan , "#427C83");
+        setColorListener(cyan , "#2fc9da");
         setColorListener(red , "#ff7f7f");
         setColorListener(green , "#519F54");
         setColorListener(purple , "#aa90e0");
@@ -152,31 +152,34 @@ public class NewNoteAdd extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if(task.isSuccessful()){
                             DocumentSnapshot doc = task.getResult();
-                            String title = (String) doc.get("note_title");
-                            String body = (String) doc.get("note_body");
-                            String color = (String) doc.get("note_colour");
-                            boolean pinned = false;
-                            try {
-                                pinned = (boolean) doc.get("pinned");
-                            } catch (Exception e){
-                                e.printStackTrace();
+                            if(doc!=null) {
+                                String title = (String) doc.get("note_title");
+                                String body = (String) doc.get("note_body");
+                                String color = (String) doc.get("note_colour");
+                                boolean pinned = false;
+                                try {
+                                    pinned = (boolean) doc.get("pinned");
+                                    String date = (String) doc.get("note_date");
+                                    String id = (String) doc.get("note_id");
+                                    Note note = new Note(title, body, date, color, id, pinned);
+                                    editedNote = note;
+                                    Log.e("NOTE GET", note.toString());
+                                    noteTitleBox.setText(title);
+                                    noteBodyBox.setText(body);
+                                    noteColor = color;
+                                    colorViewer.setCardBackgroundColor(Color.parseColor(color));
+                                    noteTitleBox.setBackgroundColor(Color.parseColor(color));
+                                    noteBodyBox.setBackgroundColor(Color.parseColor(color));
+                                    parent.setBackgroundColor(Color.parseColor(color));
+                                    noteTitleBox.setHintTextColor(Color.BLACK);
+                                    noteBodyBox.setHintTextColor(Color.BLACK);
+                                    noteTitleBox.setTextColor(Color.BLACK);
+                                    noteBodyBox.setTextColor(Color.BLACK);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            String date = (String) doc.get("note_date");
-                            String id = (String) doc.get("note_id");
-                            Note note = new Note(title, body, date, color, id, pinned);
-                            editedNote = note;
-                            Log.e("NOTE GET", note.toString());
-                            noteTitleBox.setText(title);
-                            noteBodyBox.setText(body);
-                            noteColor = color;
-                            colorViewer.setCardBackgroundColor(Color.parseColor(color));
-                            noteTitleBox.setBackgroundColor(Color.parseColor(color));
-                            noteBodyBox.setBackgroundColor(Color.parseColor(color));
-                            parent.setBackgroundColor(Color.parseColor(color));
-                            noteTitleBox.setHintTextColor(Color.BLACK);
-                            noteBodyBox.setHintTextColor(Color.BLACK);
-                            noteTitleBox.setTextColor(Color.BLACK);
-                            noteBodyBox.setTextColor(Color.BLACK);
+
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

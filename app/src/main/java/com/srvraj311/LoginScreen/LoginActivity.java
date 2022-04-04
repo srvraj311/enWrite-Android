@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -98,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
 
                 } else {
+                    Log.e("LoginError:" , task.getException().toString());
                     report.setText("Unable to Log-In , Seems Like a network error");
                     //task.getException().getMessage() to get actual message
                     if(task.getException() instanceof FirebaseAuthInvalidCredentialsException){

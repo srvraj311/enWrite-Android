@@ -128,8 +128,7 @@
                         android:orientation="vertical"
                         android:id="@+id/recylerViewHolder"
                         android:paddingBottom="60dp"
-                        android:elevation="20dp"
-                    tools:listitem="@layout/note_item"
+                        tools:listitem="@layout/note_item"
                         />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
