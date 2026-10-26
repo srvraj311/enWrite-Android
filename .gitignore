@@ -1,15 +1,15 @@
 *.iml
-.gradle
+.gradle/
+.idea/
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+*.apk
+*.aab
+# Release signing: never commit keystores or their passwords
+keystore.properties
+*.jks
+*.keystore
